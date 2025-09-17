@@ -10,6 +10,7 @@ import WhatsAppConnection from './components/WhatsAppConnection';
 import TemplateManager from './components/TemplateManager';
 import AIConfig from './components/AIConfig';
 import MessageSender from './components/MessageSender';
+import ChatList from './components/ChatList';
 import Header from './components/Header';
 
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -50,6 +51,7 @@ function AppContent() {
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/whatsapp" element={<WhatsAppConnection />} />
+              <Route path="/chats" element={<ChatList />} />
               <Route path="/templates" element={<TemplateManager />} />
               <Route path="/ai-config" element={<AIConfig />} />
               <Route path="/send-message" element={<MessageSender />} />

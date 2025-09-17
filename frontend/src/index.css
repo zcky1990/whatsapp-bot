@@ -131,3 +131,77 @@ code {
     transform: rotate(360deg);
   }
 }
+
+/* Chat List Styles */
+.chat-item {
+  transition: background-color 0.2s ease;
+}
+
+.chat-item:hover {
+  background-color: #f8f9fa !important;
+}
+
+.chat-item.selected {
+  background-color: #e3f2fd !important;
+  border-left: 4px solid #25D366;
+}
+
+.chat-item.selected:hover {
+  background-color: #e3f2fd !important;
+}
+
+/* Grid Layout */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Form Styles */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #25D366;
+  box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+}
+
+/* Status Styles */
+.status-connected {
+  color: #25D366;
+}
+
+.status-disconnected {
+  color: #dc3545;
+}
+
+/* Text Utilities */
+.text-center {
+  text-align: center;
+}
+
+.mb-20 {
+  margin-bottom: 20px;
+}

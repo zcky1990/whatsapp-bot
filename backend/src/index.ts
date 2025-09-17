@@ -6,6 +6,9 @@ import http from 'http';
 import dotenv from 'dotenv';
 
 import  authRouter from './controllers/api/auth';
+import templatesRouter from './controllers/api/templates';
+import aiConfigsRouter from './controllers/api/ai-configs';
+import whatsappRouter from './controllers/api/whatsapp';
 import registerSocketHandlers from './websocket'; // Import the handler function
 
 // Load environment variables from .env file
@@ -29,7 +32,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('uploads'));
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(express.json());
@@ -40,6 +43,9 @@ app.get('/', (res: Response) => {
 });
 
 app.use('/api', authRouter);
+app.use('/api', templatesRouter);
+app.use('/api', aiConfigsRouter);
+app.use('/api', whatsappRouter);
 
 // Start the server
 server.listen(PORT, () => {

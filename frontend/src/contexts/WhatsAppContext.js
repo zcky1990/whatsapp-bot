@@ -19,21 +19,34 @@ export const WhatsAppProvider = ({ children }) => {
   const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
-    const newSocket = io('http://localhost:5000');
+    const newSocket = io('http://localhost:3001');
     setSocket(newSocket);
 
+    newSocket.on('connect', () => {
+      console.log('Socket connected to server');
+      // Check WhatsApp status when socket connects
+      newSocket.emit('get-whatsapp-status');
+    });
+
+    newSocket.on('disconnect', () => {
+      console.log('Socket disconnected from server');
+    });
+
     newSocket.on('qr', (qr) => {
+      console.log('QR Code received:', qr);
       setQrCode(qr);
       setStatus('qr-generated');
     });
 
     newSocket.on('whatsapp-ready', (data) => {
+      console.log('WhatsApp ready event received:', data);
       setIsConnected(true);
       setStatus('connected');
       setQrCode(null);
     });
 
     newSocket.on('whatsapp-authenticated', () => {
+      console.log('WhatsApp authenticated event received');
       setStatus('authenticated');
     });
 
@@ -49,6 +62,15 @@ export const WhatsAppProvider = ({ children }) => {
       setStatus('disconnected');
     });
 
+    newSocket.on('whatsapp-status-response', (statusData) => {
+      console.log('WhatsApp status response received:', statusData);
+      setIsConnected(statusData.isReady);
+      setStatus(statusData.status);
+      if (statusData.isReady) {
+        setQrCode(null); // Clear QR code if already connected
+      }
+    });
+
     return () => {
       newSocket.close();
     };
@@ -57,18 +79,22 @@ export const WhatsAppProvider = ({ children }) => {
   const initializeWhatsApp = () => {
     if (socket) {
       console.log('Initializing WhatsApp connection...');
+      console.log('Current status before init:', status);
       setStatus('initializing');
       setRetryCount(0);
       socket.emit('init-whatsapp');
+      console.log('Emitted init-whatsapp event');
     } else {
       console.error('Socket not connected');
     }
   };
 
-  const forceQRGeneration = () => {
+  const checkWhatsAppStatus = () => {
     if (socket) {
-      console.log('Forcing QR generation...');
-      socket.emit('force-qr');
+      console.log('Checking WhatsApp status...');
+      socket.emit('get-whatsapp-status');
+    } else {
+      console.error('Socket not connected');
     }
   };
 
@@ -79,7 +105,7 @@ export const WhatsAppProvider = ({ children }) => {
     status,
     retryCount,
     initializeWhatsApp,
-    forceQRGeneration
+    checkWhatsAppStatus
   };
 
   return (

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useWhatsApp } from '../contexts/WhatsAppContext';
 import { 
   Send, 
   MessageSquare, 
@@ -11,9 +12,9 @@ import {
 } from 'lucide-react';
 
 const MessageSender = () => {
+  const { isConnected, status } = useWhatsApp();
   const [templates, setTemplates] = useState([]);
   const [aiConfigs, setAiConfigs] = useState([]);
-  const [whatsappStatus, setWhatsappStatus] = useState({ ready: false });
   const [formData, setFormData] = useState({
     type: 'direct', // direct, template, ai
     to: '',
@@ -28,7 +29,6 @@ const MessageSender = () => {
   useEffect(() => {
     fetchTemplates();
     fetchAiConfigs();
-    fetchWhatsappStatus();
   }, []);
 
   const fetchTemplates = async () => {
@@ -49,14 +49,6 @@ const MessageSender = () => {
     }
   };
 
-  const fetchWhatsappStatus = async () => {
-    try {
-      const response = await axios.get('/api/whatsapp/status');
-      setWhatsappStatus(response.data);
-    } catch (error) {
-      console.error('Failed to fetch WhatsApp status');
-    }
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -147,7 +139,7 @@ const MessageSender = () => {
           <h3 style={{ margin: 0 }}>WhatsApp Status</h3>
         </div>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          {whatsappStatus.ready ? (
+          {isConnected ? (
             <>
               <CheckCircle size={20} className="status-connected" style={{ marginRight: '10px' }} />
               <span className="status-connected">Connected and Ready</span>
@@ -159,7 +151,7 @@ const MessageSender = () => {
             </>
           )}
         </div>
-        {!whatsappStatus.ready && (
+        {!isConnected && (
           <p style={{ color: '#666', marginTop: '10px', fontSize: '14px' }}>
             Please connect your WhatsApp account first in the WhatsApp section.
           </p>
@@ -302,7 +294,7 @@ const MessageSender = () => {
           <button 
             type="submit" 
             className="btn" 
-            disabled={loading || !whatsappStatus.ready}
+            disabled={loading || !isConnected}
             style={{ width: '100%' }}
           >
             <Send size={16} style={{ marginRight: '8px' }} />

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, MessageSquare, Settings, Send, Bot } from 'lucide-react';
+import { LogOut, MessageSquare, Settings, Send, Bot, Users } from 'lucide-react';
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -55,6 +55,21 @@ const Header = () => {
           >
             <MessageSquare size={16} />
             WhatsApp
+          </Link>
+          
+          <Link 
+            to="/chats" 
+            style={{ 
+              color: 'white', 
+              textDecoration: 'none',
+              opacity: isActive('/chats') ? 1 : 0.7,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <Users size={16} />
+            Chats
           </Link>
           
           <Link 
