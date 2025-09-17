@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useWhatsApp } from '../contexts/WhatsAppContext';
@@ -15,6 +16,7 @@ import {
 } from 'lucide-react';
 
 const ChatList = () => {
+  const navigate = useNavigate();
   const { isConnected } = useWhatsApp();
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -220,7 +222,10 @@ const ChatList = () => {
                 <div
                   key={chat.id}
                   className={`chat-item ${selectedChat?.id === chat.id ? 'selected' : ''}`}
-                  onClick={() => setSelectedChat(chat)}
+                  onClick={() => {
+                    setSelectedChat(chat);
+                    navigate(`/chats/${chat.id}`);
+                  }}
                   style={{
                     display: 'flex',
                     alignItems: 'center',

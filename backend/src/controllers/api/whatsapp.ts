@@ -334,4 +334,60 @@ whatsappRouter.get('/whatsapp/chats/:chatId', authenticateToken, async (req: Req
   }
 });
 
+// Get chat messages
+whatsappRouter.get('/whatsapp/chats/:chatId/messages', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const { chatId } = req.params;
+    const { limit = 50 } = req.query;
+    
+    const whatsappInstance = whatsappClientConnection.getInstance();
+    if (!whatsappInstance || !whatsappInstance.isConnectionReady()) {
+      return res.status(400).json({ error: 'WhatsApp is not connected. Please connect WhatsApp first.' });
+    }
+    
+    const messages = await whatsappInstance.getChatMessages(chatId, parseInt(limit as string));
+    
+    res.json({
+      success: true,
+      messages: messages,
+      count: messages.length
+    });
+  } catch (error: any) {
+    console.error('Error fetching chat messages:', error);
+    res.status(500).json({ error: 'Failed to fetch chat messages: ' + error.message });
+  }
+});
+
+// Send message to specific chat
+whatsappRouter.post('/whatsapp/chats/:chatId/send', authenticateToken, async (req: Request, res: Response) => {
+  try {
+    const { chatId } = req.params;
+    const { message } = req.body;
+    
+    if (!message || !message.trim()) {
+      return res.status(400).json({ error: 'Message content is required' });
+    }
+    
+    const whatsappInstance = whatsappClientConnection.getInstance();
+    if (!whatsappInstance || !whatsappInstance.isConnectionReady()) {
+      return res.status(400).json({ error: 'WhatsApp is not connected. Please connect WhatsApp first.' });
+    }
+    
+    const sentMessage = await whatsappInstance.sendMessageToChat(chatId, message.trim());
+    
+    if (!sentMessage) {
+      return res.status(400).json({ error: 'Failed to send message' });
+    }
+    
+    res.json({
+      success: true,
+      message: sentMessage,
+      messageText: 'Message sent successfully'
+    });
+  } catch (error: any) {
+    console.error('Error sending message to chat:', error);
+    res.status(500).json({ error: 'Failed to send message: ' + error.message });
+  }
+});
+
 export default whatsappRouter;

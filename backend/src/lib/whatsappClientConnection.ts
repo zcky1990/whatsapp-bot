@@ -371,6 +371,86 @@ class whatsappClientConnection {
   }
 
   /**
+   * Gets message history for a specific chat.
+   * @param chatId The ID of the chat.
+   * @param limit Maximum number of messages to fetch (default: 50).
+   * @returns Array of messages or empty array if not ready.
+   */
+  public async getChatMessages(chatId: string, limit: number = 50): Promise<any[]> {
+    if (!this.isReady || !this.client) {
+      console.error("Library not ready. Cannot fetch messages.");
+      return [];
+    }
+    try {
+      const chat = await this.client.getChatById(chatId);
+      if (!chat) {
+        console.error(`Chat ${chatId} not found`);
+        return [];
+      }
+      
+      const messages = await chat.fetchMessages({ limit });
+      console.log(`Fetched ${messages.length} messages for chat ${chatId}`);
+      
+      // Format messages for frontend
+      return messages.map(msg => ({
+        id: msg.id._serialized,
+        body: msg.body,
+        from: msg.from,
+        to: msg.to,
+        fromMe: msg.fromMe,
+        timestamp: msg.timestamp,
+        type: msg.type,
+        hasMedia: msg.hasMedia,
+        mediaUrl: msg.hasMedia ? (msg as any).mediaUrl : null,
+        quotedMsg: (msg as any).quotedMsg ? {
+          id: (msg as any).quotedMsg.id._serialized,
+          body: (msg as any).quotedMsg.body,
+          fromMe: (msg as any).quotedMsg.fromMe
+        } : null
+      }));
+    } catch (error) {
+      console.error(`Error fetching messages for chat ${chatId}:`, error);
+      return [];
+    }
+  }
+
+  /**
+   * Sends a message to a specific chat.
+   * @param chatId The ID of the chat to send the message to.
+   * @param message The message content to send.
+   * @returns The sent message object or null if failed.
+   */
+  public async sendMessageToChat(chatId: string, message: string): Promise<any | null> {
+    if (!this.isReady || !this.client) {
+      console.error("Library not ready. Cannot send message.");
+      return null;
+    }
+    try {
+      const chat = await this.client.getChatById(chatId);
+      if (!chat) {
+        console.error(`Chat ${chatId} not found`);
+        return null;
+      }
+      
+      const sentMessage = await chat.sendMessage(message);
+      console.log(`Message sent to chat ${chatId}: ${message}`);
+      
+      return {
+        id: sentMessage.id._serialized,
+        body: sentMessage.body,
+        from: sentMessage.from,
+        to: sentMessage.to,
+        fromMe: sentMessage.fromMe,
+        timestamp: sentMessage.timestamp,
+        type: sentMessage.type
+      };
+    } catch (error) {
+      console.error(`Error sending message to chat ${chatId}:`, error);
+      return null;
+    }
+  }
+
+  /**
    * Checks if WhatsApp Web interface is properly loaded and ready.
    * @returns Promise<boolean> indicating if the interface is ready.
    */

@@ -11,6 +11,7 @@ import TemplateManager from './components/TemplateManager';
 import AIConfig from './components/AIConfig';
 import MessageSender from './components/MessageSender';
 import ChatList from './components/ChatList';
+import ChatView from './components/ChatView';
 import Header from './components/Header';
 
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -47,17 +48,22 @@ function AppContent() {
       <Router>
         <div className="App">
           <Header />
-          <div className="container">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/whatsapp" element={<WhatsAppConnection />} />
-              <Route path="/chats" element={<ChatList />} />
-              <Route path="/templates" element={<TemplateManager />} />
-              <Route path="/ai-config" element={<AIConfig />} />
-              <Route path="/send-message" element={<MessageSender />} />
-              <Route path="*" element={<Navigate to="/" />} />
-            </Routes>
-          </div>
+          <Routes>
+            <Route path="/chats/:chatId" element={<ChatView />} />
+            <Route path="*" element={
+              <div className="container">
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/whatsapp" element={<WhatsAppConnection />} />
+                  <Route path="/chats" element={<ChatList />} />
+                  <Route path="/templates" element={<TemplateManager />} />
+                  <Route path="/ai-config" element={<AIConfig />} />
+                  <Route path="/send-message" element={<MessageSender />} />
+                  <Route path="*" element={<Navigate to="/" />} />
+                </Routes>
+              </div>
+            } />
+          </Routes>
           <ToastContainer />
         </div>
       </Router>
