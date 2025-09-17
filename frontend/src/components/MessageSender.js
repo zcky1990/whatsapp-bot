@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useWhatsApp } from '../contexts/WhatsAppContext';
+import { countryCodes, DEFAULT_COUNTRY_CODE } from '../data/countryCodes';
 import { 
   Send, 
   MessageSquare, 
   Users, 
   Bot,
   CheckCircle,
-  XCircle
+  XCircle,
+  ChevronDown
 } from 'lucide-react';
 
 const MessageSender = () => {
@@ -24,12 +26,20 @@ const MessageSender = () => {
     aiConfigId: '',
     aiMessage: ''
   });
+  const [countryCode, setCountryCode] = useState(DEFAULT_COUNTRY_CODE);
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchTemplates();
     fetchAiConfigs();
   }, []);
+
+  // Update formData.to when country code or phone number changes
+  useEffect(() => {
+    const fullNumber = phoneNumber ? `${countryCode}${phoneNumber}` : '';
+    setFormData(prev => ({ ...prev, to: fullNumber }));
+  }, [countryCode, phoneNumber]);
 
   const fetchTemplates = async () => {
     try {
@@ -92,6 +102,7 @@ const MessageSender = () => {
         aiConfigId: '',
         aiMessage: ''
       });
+      setPhoneNumber('');
     } catch (error) {
       toast.error('Failed to send message: ' + (error.response?.data?.error || error.message));
     }
@@ -178,21 +189,44 @@ const MessageSender = () => {
 
           {/* Recipient */}
           <div className="form-group">
-            <label htmlFor="to" className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Recipient Phone Number
             </label>
-            <input
-              type="tel"
-              id="to"
-              value={formData.to}
-              onChange={(e) => setFormData({ ...formData, to: e.target.value })}
-              required
-              placeholder="e.g., +1234567890 or 1234567890"
-              className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
-            />
+            <div className="flex gap-2">
+              {/* Country Code Dropdown */}
+              <div className="relative flex-shrink-0">
+                <select
+                  value={countryCode}
+                  onChange={(e) => setCountryCode(e.target.value)}
+                  className="appearance-none bg-white border border-gray-300 rounded-lg px-3 py-3 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green min-w-[120px]"
+                >
+                  {countryCodes.map((country) => (
+                    <option key={country.code} value={country.code}>
+                      {country.flag} {country.code}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown size={16} className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
+              </div>
+              
+              {/* Phone Number Input */}
+              <input
+                type="tel"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+                placeholder="81234567890"
+                className="flex-1 p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
+              />
+            </div>
             <small className="text-gray-500 text-xs mt-1 block">
-              Include country code (e.g., +1 for US, +44 for UK)
+              Enter phone number without country code (e.g., 81234567890 for Indonesia)
             </small>
+            {formData.to && (
+              <div className="mt-2 p-2 bg-gray-50 rounded text-xs text-gray-600">
+                <strong>Full number:</strong> {formData.to}
+              </div>
+            )}
           </div>
 
           {/* Direct Message */}
