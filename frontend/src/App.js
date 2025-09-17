@@ -22,9 +22,11 @@ function AppContent() {
 
   if (loading) {
     return (
-      <div className="container">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <h2>Loading...</h2>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-whatsapp-green mx-auto mb-4"></div>
+          <h2 className="text-xl font-semibold text-gray-800 mb-2">Checking Session...</h2>
+          <p className="text-gray-600">Please wait while we verify your login status</p>
         </div>
       </div>
     );

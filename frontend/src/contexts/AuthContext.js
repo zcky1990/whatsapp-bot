@@ -16,24 +16,26 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      // Verify token is still valid
-      axios.get('/api/auth/verify')
-        .then(response => {
+    const checkAuthStatus = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          // Verify token is still valid
+          const response = await axios.get('/api/auth/verify');
           setUser(response.data.user);
-        })
-        .catch(() => {
+          console.log('Auto-login successful:', response.data.user.username);
+        } catch (error) {
+          console.log('Token expired or invalid, clearing session');
           localStorage.removeItem('token');
           delete axios.defaults.headers.common['Authorization'];
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    } else {
+          setUser(null);
+        }
+      }
       setLoading(false);
-    }
+    };
+
+    checkAuthStatus();
   }, []);
 
   const login = async (username, password) => {
@@ -78,12 +80,17 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
+  const isAuthenticated = () => {
+    return user !== null;
+  };
+
   const value = {
     user,
     login,
     register,
     logout,
-    loading
+    loading,
+    isAuthenticated
   };
 
   return (

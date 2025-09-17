@@ -35,8 +35,13 @@ authRouter.post('/auth/login', async (req: Request, res: Response) => {
 });
 
 authRouter.get('/auth/verify', authenticateToken, (req: Request, res: Response) => {
+  const user = (req as any).user;
   res.json({ 
-    message: "user using valid token"
+    user: {
+      userId: user.userId,
+      username: user.username
+    },
+    message: "Token is valid"
   });
 });
 
