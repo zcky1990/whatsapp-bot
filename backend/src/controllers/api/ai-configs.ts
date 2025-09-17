@@ -46,8 +46,8 @@ aiConfigsRouter.post('/ai-configs', authenticateToken, async (req: Request, res:
     const { name, endpoint, api_key } = req.body;
     const userId = (req as any).user.userId;
     
-    if (!name || !endpoint || !api_key) {
-      return res.status(400).json({ error: 'Name, endpoint, and API key are required' });
+    if (!name || !endpoint) {
+      return res.status(400).json({ error: 'Name and endpoint are required' });
     }
     
     const aiConfigData = {
@@ -72,8 +72,8 @@ aiConfigsRouter.put('/ai-configs/:id', authenticateToken, async (req: Request, r
     const { name, endpoint, api_key } = req.body;
     const userId = (req as any).user.userId;
     
-    if (!name || !endpoint || !api_key) {
-      return res.status(400).json({ error: 'Name, endpoint, and API key are required' });
+    if (!name || !endpoint) {
+      return res.status(400).json({ error: 'Name and endpoint are required' });
     }
     
     const aiConfigData = {
