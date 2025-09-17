@@ -259,6 +259,165 @@ const TemplateManager = () => {
         ))}
       </div>
 
+      {/* Examples Section */}
+      <div className="card">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Template Examples & Guide</h3>
+        
+        <div className="space-y-6">
+          {/* How Variables Work */}
+          <div>
+            <h4 className="text-base font-medium text-gray-700 mb-3">How Variables Work</h4>
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+              <p className="text-blue-800 text-sm mb-2">
+                <strong>Variables</strong> allow you to personalize messages with dynamic content. 
+                Use curly braces <code className="bg-blue-100 px-1 rounded">{'{variable_name}'}</code> to create placeholders.
+              </p>
+              <p className="text-blue-700 text-sm">
+                When sending a message, you'll be prompted to fill in values for each variable.
+              </p>
+            </div>
+          </div>
+
+          {/* Example Templates */}
+          <div>
+            <h4 className="text-base font-medium text-gray-700 mb-3">Example Templates</h4>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {/* Welcome Message Example */}
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h5 className="font-medium text-gray-800 mb-2">Welcome Message</h5>
+                <div className="bg-gray-50 p-3 rounded font-mono text-sm mb-3">
+                  Hello {'{name}'}! Welcome to {'{company_name}'}. 
+                  Your account has been created successfully. 
+                  Your reference number is {'{reference_number}'}.
+                </div>
+                <div className="text-xs text-gray-600">
+                  <strong>Variables:</strong> name, company_name, reference_number
+                </div>
+              </div>
+
+              {/* Appointment Reminder Example */}
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h5 className="font-medium text-gray-800 mb-2">Appointment Reminder</h5>
+                <div className="bg-gray-50 p-3 rounded font-mono text-sm mb-3">
+                  Hi {'{customer_name}'}, this is a reminder about your appointment 
+                  on {'{appointment_date}'} at {'{appointment_time}'} 
+                  with {'{doctor_name}'}. Please arrive 15 minutes early.
+                </div>
+                <div className="text-xs text-gray-600">
+                  <strong>Variables:</strong> customer_name, appointment_date, appointment_time, doctor_name
+                </div>
+              </div>
+
+              {/* Order Confirmation Example */}
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h5 className="font-medium text-gray-800 mb-2">Order Confirmation</h5>
+                <div className="bg-gray-50 p-3 rounded font-mono text-sm mb-3">
+                  Thank you {'{customer_name}'}! Your order #{'{order_id}'} 
+                  for {'{product_name}'} has been confirmed. 
+                  Total amount: {'{currency}'}{'{amount}'}. 
+                  Expected delivery: {'{delivery_date}'}.
+                </div>
+                <div className="text-xs text-gray-600">
+                  <strong>Variables:</strong> customer_name, order_id, product_name, currency, amount, delivery_date
+                </div>
+              </div>
+
+              {/* Payment Reminder Example */}
+              <div className="border border-gray-200 rounded-lg p-4">
+                <h5 className="font-medium text-gray-800 mb-2">Payment Reminder</h5>
+                <div className="bg-gray-50 p-3 rounded font-mono text-sm mb-3">
+                  Dear {'{customer_name}'}, your payment of {'{currency}'}{'{amount}'} 
+                  for {'{service_name}'} is due on {'{due_date}'}. 
+                  Please make payment to avoid late fees.
+                </div>
+                <div className="text-xs text-gray-600">
+                  <strong>Variables:</strong> customer_name, currency, amount, service_name, due_date
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Best Practices */}
+          <div>
+            <h4 className="text-base font-medium text-gray-700 mb-3">Best Practices</h4>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-whatsapp-green text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">1</div>
+                <div>
+                  <p className="text-sm text-gray-700">
+                    <strong>Use descriptive variable names:</strong> Use names like <code className="bg-gray-100 px-1 rounded">customer_name</code> instead of <code className="bg-gray-100 px-1 rounded">name</code>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-whatsapp-green text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">2</div>
+                <div>
+                  <p className="text-sm text-gray-700">
+                    <strong>Keep messages concise:</strong> WhatsApp messages work best when they're clear and to the point
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-whatsapp-green text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">3</div>
+                <div>
+                  <p className="text-sm text-gray-700">
+                    <strong>Test your templates:</strong> Always test with sample data before using in production
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="w-6 h-6 bg-whatsapp-green text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5">4</div>
+                <div>
+                  <p className="text-sm text-gray-700">
+                    <strong>Use consistent formatting:</strong> Keep date, time, and currency formats consistent across templates
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quick Start */}
+          <div className="bg-whatsapp-green/10 p-4 rounded-lg border border-whatsapp-green/20">
+            <h4 className="text-base font-medium text-whatsapp-green mb-2">Quick Start</h4>
+            <p className="text-sm text-gray-700 mb-3">
+              Ready to create your first template? Click the "New Template" button above and try one of these examples:
+            </p>
+            <div className="flex flex-wrap gap-2">
+              <button 
+                onClick={() => {
+                  setFormData({
+                    name: 'Welcome Message',
+                    content: 'Hello {name}! Welcome to {company_name}. Your account has been created successfully. Your reference number is {reference_number}.',
+                    variables: ['name', 'company_name', 'reference_number']
+                  });
+                  setShowForm(true);
+                }}
+                className="text-xs bg-whatsapp-green text-white px-3 py-1 rounded-full hover:bg-whatsapp-green/80 transition-colors"
+              >
+                Try Welcome Message
+              </button>
+              <button 
+                onClick={() => {
+                  setFormData({
+                    name: 'Appointment Reminder',
+                    content: 'Hi {customer_name}, this is a reminder about your appointment on {appointment_date} at {appointment_time} with {doctor_name}. Please arrive 15 minutes early.',
+                    variables: ['customer_name', 'appointment_date', 'appointment_time', 'doctor_name']
+                  });
+                  setShowForm(true);
+                }}
+                className="text-xs bg-whatsapp-green text-white px-3 py-1 rounded-full hover:bg-whatsapp-green/80 transition-colors"
+              >
+                Try Appointment Reminder
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {templates.length === 0 && (
         <div className="card text-center py-10">
           <MessageSquare size={48} className="mx-auto mb-4 text-gray-300" />
