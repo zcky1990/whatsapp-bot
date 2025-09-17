@@ -129,45 +129,46 @@ const MessageSender = () => {
   const templateVariables = selectedTemplate ? JSON.parse(selectedTemplate.variables || '[]') : [];
 
   return (
-    <div>
-      <h1>Send Messages</h1>
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold text-gray-800 mb-6">Send Messages</h1>
       
       {/* WhatsApp Status */}
-      <div className="card" style={{ marginBottom: '20px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-          <MessageSquare size={20} style={{ marginRight: '10px' }} />
-          <h3 style={{ margin: 0 }}>WhatsApp Status</h3>
+      <div className="card">
+        <div className="flex items-center mb-3">
+          <MessageSquare size={20} className="mr-3 text-whatsapp-green" />
+          <h3 className="text-lg font-semibold text-gray-800 m-0">WhatsApp Status</h3>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div className="flex items-center">
           {isConnected ? (
             <>
-              <CheckCircle size={20} className="status-connected" style={{ marginRight: '10px' }} />
-              <span className="status-connected">Connected and Ready</span>
+              <CheckCircle size={20} className="text-whatsapp-green mr-3" />
+              <span className="text-whatsapp-green font-medium">Connected and Ready</span>
             </>
           ) : (
             <>
-              <XCircle size={20} className="status-disconnected" style={{ marginRight: '10px' }} />
-              <span className="status-disconnected">Not Connected</span>
+              <XCircle size={20} className="text-red-600 mr-3" />
+              <span className="text-red-600 font-medium">Not Connected</span>
             </>
           )}
         </div>
         {!isConnected && (
-          <p style={{ color: '#666', marginTop: '10px', fontSize: '14px' }}>
+          <p className="text-gray-600 mt-3 text-sm">
             Please connect your WhatsApp account first in the WhatsApp section.
           </p>
         )}
       </div>
 
       <div className="card">
-        <h3>Send Message</h3>
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Send Message</h3>
         
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="space-y-4">
           {/* Message Type Selection */}
           <div className="form-group">
-            <label>Message Type</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Message Type</label>
             <select
               value={formData.type}
               onChange={(e) => setFormData({ ...formData, type: e.target.value })}
+              className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
             >
               <option value="direct">Direct Message</option>
               <option value="template">Template Message</option>
@@ -177,7 +178,9 @@ const MessageSender = () => {
 
           {/* Recipient */}
           <div className="form-group">
-            <label htmlFor="to">Recipient Phone Number</label>
+            <label htmlFor="to" className="block text-sm font-medium text-gray-700 mb-1">
+              Recipient Phone Number
+            </label>
             <input
               type="tel"
               id="to"
@@ -185,8 +188,9 @@ const MessageSender = () => {
               onChange={(e) => setFormData({ ...formData, to: e.target.value })}
               required
               placeholder="e.g., +1234567890 or 1234567890"
+              className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
             />
-            <small style={{ color: '#666' }}>
+            <small className="text-gray-500 text-xs mt-1 block">
               Include country code (e.g., +1 for US, +44 for UK)
             </small>
           </div>
@@ -194,7 +198,9 @@ const MessageSender = () => {
           {/* Direct Message */}
           {formData.type === 'direct' && (
             <div className="form-group">
-              <label htmlFor="message">Message Content</label>
+              <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
+                Message Content
+              </label>
               <textarea
                 id="message"
                 value={formData.message}
@@ -202,6 +208,7 @@ const MessageSender = () => {
                 required
                 placeholder="Type your message here..."
                 rows="4"
+                className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green resize-y"
               />
             </div>
           )}
@@ -210,12 +217,15 @@ const MessageSender = () => {
           {formData.type === 'template' && (
             <>
               <div className="form-group">
-                <label htmlFor="templateId">Select Template</label>
+                <label htmlFor="templateId" className="block text-sm font-medium text-gray-700 mb-1">
+                  Select Template
+                </label>
                 <select
                   id="templateId"
                   value={formData.templateId}
                   onChange={(e) => handleTemplateChange(e.target.value)}
                   required
+                  className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
                 >
                   <option value="">Choose a template...</option>
                   {templates.map(template => (
@@ -228,15 +238,8 @@ const MessageSender = () => {
 
               {selectedTemplate && (
                 <div className="form-group">
-                  <label>Template Preview</label>
-                  <div style={{ 
-                    background: '#f8f9fa', 
-                    padding: '10px', 
-                    borderRadius: '4px', 
-                    marginBottom: '10px',
-                    fontFamily: 'monospace',
-                    fontSize: '14px'
-                  }}>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Template Preview</label>
+                  <div className="bg-gray-50 p-3 rounded-lg font-mono text-sm text-gray-800">
                     {selectedTemplate.content}
                   </div>
                 </div>
@@ -244,13 +247,16 @@ const MessageSender = () => {
 
               {templateVariables.map(variable => (
                 <div key={variable} className="form-group">
-                  <label htmlFor={`var-${variable}`}>{variable}</label>
+                  <label htmlFor={`var-${variable}`} className="block text-sm font-medium text-gray-700 mb-1">
+                    {variable}
+                  </label>
                   <input
                     type="text"
                     id={`var-${variable}`}
                     value={formData.templateVariables[variable] || ''}
                     onChange={(e) => updateTemplateVariable(variable, e.target.value)}
                     placeholder={`Enter ${variable}`}
+                    className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
                   />
                 </div>
               ))}
@@ -261,12 +267,15 @@ const MessageSender = () => {
           {formData.type === 'ai' && (
             <>
               <div className="form-group">
-                <label htmlFor="aiConfigId">Select AI Configuration</label>
+                <label htmlFor="aiConfigId" className="block text-sm font-medium text-gray-700 mb-1">
+                  Select AI Configuration
+                </label>
                 <select
                   id="aiConfigId"
                   value={formData.aiConfigId}
                   onChange={(e) => setFormData({ ...formData, aiConfigId: e.target.value })}
                   required
+                  className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
                 >
                   <option value="">Choose an AI configuration...</option>
                   {aiConfigs.map(config => (
@@ -278,7 +287,9 @@ const MessageSender = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="aiMessage">Message to AI</label>
+                <label htmlFor="aiMessage" className="block text-sm font-medium text-gray-700 mb-1">
+                  Message to AI
+                </label>
                 <textarea
                   id="aiMessage"
                   value={formData.aiMessage}
@@ -286,6 +297,7 @@ const MessageSender = () => {
                   required
                   placeholder="Enter the message or prompt for the AI..."
                   rows="3"
+                  className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green resize-y"
                 />
               </div>
             </>
@@ -293,38 +305,37 @@ const MessageSender = () => {
 
           <button 
             type="submit" 
-            className="btn" 
+            className="btn w-full flex items-center justify-center" 
             disabled={loading || !isConnected}
-            style={{ width: '100%' }}
           >
-            <Send size={16} style={{ marginRight: '8px' }} />
+            <Send size={16} className="mr-2" />
             {loading ? 'Sending...' : 'Send Message'}
           </button>
         </form>
       </div>
 
       {/* Quick Actions */}
-      <div className="card mt-20">
-        <h3>Quick Actions</h3>
-        <div className="grid" style={{ marginTop: '15px' }}>
-          <div style={{ textAlign: 'center' }}>
-            <Users size={32} color="#25D366" style={{ marginBottom: '10px' }} />
-            <h4>Direct Messages</h4>
-            <p style={{ color: '#666', fontSize: '14px' }}>
+      <div className="card">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">Quick Actions</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <Users size={32} className="text-whatsapp-green mx-auto mb-3" />
+            <h4 className="text-base font-semibold text-gray-800 mb-2">Direct Messages</h4>
+            <p className="text-gray-600 text-sm">
               Send personalized messages directly to contacts
             </p>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            <MessageSquare size={32} color="#25D366" style={{ marginBottom: '10px' }} />
-            <h4>Template Messages</h4>
-            <p style={{ color: '#666', fontSize: '14px' }}>
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <MessageSquare size={32} className="text-whatsapp-green mx-auto mb-3" />
+            <h4 className="text-base font-semibold text-gray-800 mb-2">Template Messages</h4>
+            <p className="text-gray-600 text-sm">
               Use pre-defined templates with dynamic variables
             </p>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            <Bot size={32} color="#25D366" style={{ marginBottom: '10px' }} />
-            <h4>AI Messages</h4>
-            <p style={{ color: '#666', fontSize: '14px' }}>
+          <div className="text-center p-4 bg-gray-50 rounded-lg">
+            <Bot size={32} className="text-whatsapp-green mx-auto mb-3" />
+            <h4 className="text-base font-semibold text-gray-800 mb-2">AI Messages</h4>
+            <p className="text-gray-600 text-sm">
               Generate responses using AI agents
             </p>
           </div>

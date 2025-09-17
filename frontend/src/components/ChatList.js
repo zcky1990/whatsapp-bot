@@ -109,33 +109,33 @@ const ChatList = () => {
   }
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1>WhatsApp Chats</h1>
-        <div style={{ display: 'flex', gap: '10px' }}>
+    <div className="space-y-5">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-5">
+        <h1 className="text-2xl font-bold text-gray-800">WhatsApp Chats</h1>
+        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
           <button 
             onClick={fetchChats}
-            className="btn btn-secondary"
+            className="btn btn-secondary flex items-center justify-center"
             disabled={loading}
           >
-            <RefreshCw size={16} style={{ marginRight: '8px', animation: loading ? 'spin 1s linear infinite' : 'none' }} />
-            Refresh
+            <RefreshCw size={16} className={`mr-2 ${loading ? 'animate-spin' : ''}`} />
+            <span className="hidden sm:inline">Refresh</span>
           </button>
           <button 
             onClick={() => setShowNewChatForm(true)}
-            className="btn"
+            className="btn flex items-center justify-center"
           >
-            <Plus size={16} style={{ marginRight: '8px' }} />
-            New Chat
+            <Plus size={16} className="mr-2" />
+            <span className="hidden sm:inline">New Chat</span>
           </button>
         </div>
       </div>
 
       {/* New Chat Form */}
       {showNewChatForm && (
-        <div className="card" style={{ marginBottom: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3>Start New Chat</h3>
+        <div className="card">
+          <div className="flex justify-between items-center mb-5">
+            <h3 className="text-lg font-semibold text-gray-800">Start New Chat</h3>
             <button 
               onClick={() => setShowNewChatForm(false)}
               className="btn btn-secondary"
@@ -144,23 +144,30 @@ const ChatList = () => {
             </button>
           </div>
           
-          <form onSubmit={startNewChat}>
+          <form onSubmit={startNewChat} className="space-y-4">
             <div className="form-group">
-              <label htmlFor="phoneNumber">Phone Number</label>
+              <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1">
+                Phone Number
+              </label>
               <input
                 type="tel"
                 id="phoneNumber"
                 value={newChatNumber}
                 onChange={(e) => setNewChatNumber(e.target.value)}
                 placeholder="Enter phone number (e.g., +1234567890)"
+                className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
                 required
               />
-              <small style={{ color: '#666', marginTop: '5px', display: 'block' }}>
+              <small className="text-gray-500 text-xs mt-1 block">
                 Include country code (e.g., +1 for US, +62 for Indonesia)
               </small>
             </div>
             
-            <button type="submit" className="btn" disabled={loading}>
+            <button 
+              type="submit" 
+              className="btn w-full sm:w-auto" 
+              disabled={loading}
+            >
               {loading ? 'Starting Chat...' : 'Start Chat'}
             </button>
           </form>
@@ -168,21 +175,15 @@ const ChatList = () => {
       )}
 
       {/* Search */}
-      <div className="card" style={{ marginBottom: '20px' }}>
-        <div style={{ position: 'relative' }}>
-          <Search size={20} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#666' }} />
+      <div className="card">
+        <div className="relative">
+          <Search size={20} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             placeholder="Search chats..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            style={{ 
-              width: '100%', 
-              padding: '12px 12px 12px 40px', 
-              border: '1px solid #ddd', 
-              borderRadius: '4px',
-              fontSize: '16px'
-            }}
+            className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg text-base focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
           />
         </div>
       </div>
@@ -190,124 +191,85 @@ const ChatList = () => {
       {/* Chat List */}
       <div className="card">
         {loading && chats.length === 0 ? (
-          <div className="text-center" style={{ padding: '40px' }}>
-            <RefreshCw size={32} style={{ animation: 'spin 1s linear infinite', marginBottom: '15px' }} />
-            <p>Loading chats...</p>
+          <div className="text-center py-10">
+            <RefreshCw size={32} className="animate-spin mx-auto mb-4 text-whatsapp-green" />
+            <p className="text-gray-600">Loading chats...</p>
           </div>
         ) : filteredChats.length === 0 ? (
-          <div className="text-center" style={{ padding: '40px' }}>
-            <MessageSquare size={48} color="#ccc" style={{ marginBottom: '15px' }} />
-            <h3>No Chats Found</h3>
-            <p style={{ color: '#666', marginBottom: '20px' }}>
+          <div className="text-center py-10">
+            <MessageSquare size={48} className="mx-auto mb-4 text-gray-300" />
+            <h3 className="text-lg font-semibold text-gray-800 mb-2">No Chats Found</h3>
+            <p className="text-gray-600 mb-5">
               {searchTerm ? 'No chats match your search.' : 'You don\'t have any chats yet.'}
             </p>
             {!searchTerm && (
               <button 
                 onClick={() => setShowNewChatForm(true)}
-                className="btn"
+                className="btn flex items-center mx-auto"
               >
-                <Plus size={16} style={{ marginRight: '8px' }} />
+                <Plus size={16} className="mr-2" />
                 Start Your First Chat
               </button>
             )}
           </div>
         ) : (
           <div>
-            <div style={{ marginBottom: '15px', color: '#666' }}>
+            <div className="mb-4 text-sm text-gray-600">
               {filteredChats.length} chat{filteredChats.length !== 1 ? 's' : ''} found
             </div>
             
-            <div style={{ maxHeight: '600px', overflowY: 'auto' }}>
+            <div className="max-h-96 overflow-y-auto space-y-1">
               {filteredChats.map((chat) => (
                 <div
                   key={chat.id}
-                  className={`chat-item ${selectedChat?.id === chat.id ? 'selected' : ''}`}
+                  className={`chat-item flex items-center p-4 border-b border-gray-100 cursor-pointer transition-colors duration-200 hover:bg-gray-50 ${
+                    selectedChat?.id === chat.id ? 'bg-blue-50 border-l-4 border-whatsapp-green' : ''
+                  }`}
                   onClick={() => {
                     setSelectedChat(chat);
                     navigate(`/chats/${chat.id}`);
                   }}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    padding: '15px',
-                    borderBottom: '1px solid #eee',
-                    cursor: 'pointer',
-                    transition: 'background-color 0.2s',
-                    backgroundColor: selectedChat?.id === chat.id ? '#f0f8ff' : 'transparent'
-                  }}
                 >
-                  <div style={{ marginRight: '15px' }}>
+                  <div className="mr-4 flex-shrink-0">
                     {chat.isGroup ? (
-                      <div style={{
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '50%',
-                        backgroundColor: '#25D366',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}>
+                      <div className="w-12 h-12 rounded-full bg-whatsapp-green flex items-center justify-center text-white">
                         <Users size={24} />
                       </div>
                     ) : (
-                      <div style={{
-                        width: '50px',
-                        height: '50px',
-                        borderRadius: '50%',
-                        backgroundColor: '#25D366',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: 'white'
-                      }}>
+                      <div className="w-12 h-12 rounded-full bg-whatsapp-green flex items-center justify-center text-white">
                         <User size={24} />
                       </div>
                     )}
                   </div>
                   
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '5px' }}>
-                      <h4 style={{ margin: 0, fontSize: '16px', fontWeight: 'bold' }}>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-center mb-1">
+                      <h4 className="text-base font-semibold text-gray-800 truncate">
                         {chat.name}
                       </h4>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         {chat.lastMessage && (
-                          <span style={{ fontSize: '12px', color: '#666' }}>
+                          <span className="text-xs text-gray-500">
                             {formatTime(chat.lastMessage.timestamp)}
                           </span>
                         )}
                         {chat.unreadCount > 0 && (
-                          <span style={{
-                            backgroundColor: '#25D366',
-                            color: 'white',
-                            borderRadius: '10px',
-                            padding: '2px 6px',
-                            fontSize: '12px',
-                            fontWeight: 'bold'
-                          }}>
+                          <span className="bg-whatsapp-green text-white rounded-full px-2 py-1 text-xs font-bold min-w-[20px] text-center">
                             {chat.unreadCount}
                           </span>
                         )}
                       </div>
                     </div>
                     
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                    <div className="flex items-center gap-2">
                       {chat.lastMessage && (
                         <>
                           {chat.lastMessage.fromMe ? (
-                            <CheckCircle size={12} color="#25D366" />
+                            <CheckCircle size={12} className="text-whatsapp-green flex-shrink-0" />
                           ) : (
-                            <Clock size={12} color="#666" />
+                            <Clock size={12} className="text-gray-400 flex-shrink-0" />
                           )}
-                          <p style={{ 
-                            margin: 0, 
-                            fontSize: '14px', 
-                            color: '#666',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            whiteSpace: 'nowrap'
-                          }}>
+                          <p className="text-sm text-gray-600 truncate m-0">
                             {formatMessage(chat.lastMessage)}
                           </p>
                         </>
@@ -323,33 +285,31 @@ const ChatList = () => {
 
       {/* Selected Chat Details */}
       {selectedChat && (
-        <div className="card" style={{ marginTop: '20px' }}>
-          <h3>Chat Details</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '15px' }}>
-            <div>
-              <strong>Name:</strong> {selectedChat.name}
+        <div className="card">
+          <h3 className="text-lg font-semibold text-gray-800 mb-4">Chat Details</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div className="space-y-1">
+              <span className="font-medium text-gray-700">Name:</span>
+              <span className="text-gray-900">{selectedChat.name}</span>
             </div>
-            <div>
-              <strong>Type:</strong> {selectedChat.isGroup ? 'Group' : 'Individual'}
+            <div className="space-y-1">
+              <span className="font-medium text-gray-700">Type:</span>
+              <span className="text-gray-900">{selectedChat.isGroup ? 'Group' : 'Individual'}</span>
             </div>
-            <div>
-              <strong>Unread Messages:</strong> {selectedChat.unreadCount || 0}
+            <div className="space-y-1">
+              <span className="font-medium text-gray-700">Unread Messages:</span>
+              <span className="text-gray-900">{selectedChat.unreadCount || 0}</span>
             </div>
-            <div>
-              <strong>Last Activity:</strong> {formatTime(selectedChat.timestamp)}
+            <div className="space-y-1">
+              <span className="font-medium text-gray-700">Last Activity:</span>
+              <span className="text-gray-900">{formatTime(selectedChat.timestamp)}</span>
             </div>
           </div>
           
           {selectedChat.lastMessage && (
-            <div style={{ marginTop: '15px' }}>
-              <strong>Last Message:</strong>
-              <div style={{ 
-                background: '#f8f9fa', 
-                padding: '10px', 
-                borderRadius: '4px', 
-                marginTop: '5px',
-                fontStyle: 'italic'
-              }}>
+            <div className="mt-4">
+              <span className="font-medium text-gray-700">Last Message:</span>
+              <div className="bg-gray-50 p-3 rounded-lg mt-2 italic text-gray-700">
                 {selectedChat.lastMessage.body}
               </div>
             </div>

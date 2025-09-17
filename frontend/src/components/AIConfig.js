@@ -104,30 +104,34 @@ const AIConfig = () => {
   };
 
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1>AI Agent Configuration</h1>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
+        <h1 className="text-2xl font-bold text-gray-800">AI Agent Configuration</h1>
         <button 
           onClick={() => setShowForm(true)}
-          className="btn"
+          className="btn flex items-center justify-center"
         >
-          <Plus size={16} style={{ marginRight: '8px' }} />
+          <Plus size={16} className="mr-2" />
           New AI Config
         </button>
       </div>
 
       {showForm && (
-        <div className="card" style={{ marginBottom: '20px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h3>{editingConfig ? 'Edit AI Configuration' : 'Create New AI Configuration'}</h3>
-            <button onClick={resetForm} className="btn btn-secondary">
+        <div className="card">
+          <div className="flex justify-between items-center mb-5">
+            <h3 className="text-lg font-semibold text-gray-800">
+              {editingConfig ? 'Edit AI Configuration' : 'Create New AI Configuration'}
+            </h3>
+            <button onClick={resetForm} className="btn btn-secondary p-2">
               <X size={16} />
             </button>
           </div>
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="form-group">
-              <label htmlFor="name">Configuration Name</label>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                Configuration Name
+              </label>
               <input
                 type="text"
                 id="name"
@@ -135,11 +139,14 @@ const AIConfig = () => {
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
                 placeholder="Enter configuration name (e.g., OpenAI GPT-4)"
+                className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="endpoint">API Endpoint</label>
+              <label htmlFor="endpoint" className="block text-sm font-medium text-gray-700 mb-1">
+                API Endpoint
+              </label>
               <input
                 type="url"
                 id="endpoint"
@@ -147,33 +154,36 @@ const AIConfig = () => {
                 onChange={(e) => setFormData({ ...formData, endpoint: e.target.value })}
                 required
                 placeholder="https://api.openai.com/v1/chat/completions"
+                className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="api_key">API Key (Optional)</label>
+              <label htmlFor="api_key" className="block text-sm font-medium text-gray-700 mb-1">
+                API Key (Optional)
+              </label>
               <input
                 type="password"
                 id="api_key"
                 value={formData.api_key}
                 onChange={(e) => setFormData({ ...formData, api_key: e.target.value })}
                 placeholder="Enter your API key (leave empty if not required)"
+                className="w-full p-3 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green"
               />
             </div>
 
-            <div style={{ 
-              background: '#e7f3ff', 
-              padding: '15px', 
-              borderRadius: '4px', 
-              marginBottom: '20px',
-              border: '1px solid #b3d9ff'
-            }}>
-              <strong>API Format:</strong> The endpoint should accept POST requests with a JSON body containing a "message" field. If an API key is provided, it will be sent in the Authorization header as "Bearer {'{'}api_key{'}'}". Leave the API key empty for public APIs or APIs that don't require authentication.
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 mb-5">
+              <strong className="text-blue-800">API Format:</strong>
+              <p className="text-blue-700 text-sm mt-1">
+                The endpoint should accept POST requests with a JSON body containing a "message" field. 
+                If an API key is provided, it will be sent in the Authorization header as "Bearer {'{'}api_key{'}'}". 
+                Leave the API key empty for public APIs or APIs that don't require authentication.
+              </p>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button type="submit" className="btn" disabled={loading}>
-                <Save size={16} style={{ marginRight: '8px' }} />
+            <div className="flex flex-col sm:flex-row gap-3">
+              <button type="submit" className="btn flex items-center justify-center" disabled={loading}>
+                <Save size={16} className="mr-2" />
                 {loading ? 'Saving...' : (editingConfig ? 'Update Configuration' : 'Create Configuration')}
               </button>
               <button type="button" onClick={resetForm} className="btn btn-secondary">
@@ -184,71 +194,58 @@ const AIConfig = () => {
         </div>
       )}
 
-      <div className="grid">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {configs.map((config) => (
-          <div key={config.id} className="card">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
-              <h3 style={{ margin: 0 }}>{config.name}</h3>
-              <div style={{ display: 'flex', gap: '5px' }}>
+          <div key={config.id} className="card hover:shadow-lg transition-shadow duration-200">
+            <div className="flex justify-between items-start mb-4">
+              <h3 className="text-lg font-semibold text-gray-800 m-0">{config.name}</h3>
+              <div className="flex gap-2">
                 <button
                   onClick={() => testConnection(config)}
-                  className="btn"
+                  className="btn p-2"
                   disabled={testing}
-                  style={{ padding: '5px' }}
+                  title="Test Connection"
                 >
                   <Bot size={16} />
                 </button>
                 <button
                   onClick={() => handleEdit(config)}
-                  className="btn btn-secondary"
-                  style={{ padding: '5px' }}
+                  className="btn btn-secondary p-2"
+                  title="Edit"
                 >
                   <Edit size={16} />
                 </button>
                 <button
                   onClick={() => handleDelete(config.id)}
-                  className="btn btn-danger"
-                  style={{ padding: '5px' }}
+                  className="btn btn-danger p-2"
+                  title="Delete"
                 >
                   <Trash2 size={16} />
                 </button>
               </div>
             </div>
 
-            <div style={{ marginBottom: '15px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                <Link size={16} style={{ marginRight: '8px', color: '#666' }} />
-                <strong>Endpoint:</strong>
+            <div className="mb-4">
+              <div className="flex items-center mb-2">
+                <Link size={16} className="mr-2 text-gray-500" />
+                <strong className="text-sm font-medium text-gray-700">Endpoint:</strong>
               </div>
-              <div style={{ 
-                background: '#f8f9fa', 
-                padding: '8px', 
-                borderRadius: '4px', 
-                fontSize: '14px',
-                fontFamily: 'monospace',
-                wordBreak: 'break-all'
-              }}>
+              <div className="bg-gray-50 p-3 rounded-lg font-mono text-sm text-gray-800 break-all">
                 {config.endpoint}
               </div>
             </div>
 
-            <div style={{ marginBottom: '15px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-                <Key size={16} style={{ marginRight: '8px', color: '#666' }} />
-                <strong>API Key:</strong>
+            <div className="mb-4">
+              <div className="flex items-center mb-2">
+                <Key size={16} className="mr-2 text-gray-500" />
+                <strong className="text-sm font-medium text-gray-700">API Key:</strong>
               </div>
-              <div style={{ 
-                background: '#f8f9fa', 
-                padding: '8px', 
-                borderRadius: '4px', 
-                fontSize: '14px',
-                fontFamily: 'monospace'
-              }}>
+              <div className="bg-gray-50 p-3 rounded-lg font-mono text-sm text-gray-800">
                 {config.api_key ? '••••••••••••••••' : 'Not set'}
               </div>
             </div>
 
-            <div style={{ fontSize: '12px', color: '#666' }}>
+            <div className="text-xs text-gray-500">
               Created: {new Date(config.created_at).toLocaleDateString()}
             </div>
           </div>
@@ -256,38 +253,74 @@ const AIConfig = () => {
       </div>
 
       {configs.length === 0 && (
-        <div className="card text-center">
-          <Bot size={48} color="#ccc" style={{ marginBottom: '15px' }} />
-          <h3>No AI Configurations Yet</h3>
-          <p style={{ color: '#666', marginBottom: '20px' }}>
+        <div className="card text-center py-10">
+          <Bot size={48} className="mx-auto mb-4 text-gray-300" />
+          <h3 className="text-lg font-semibold text-gray-800 mb-2">No AI Configurations Yet</h3>
+          <p className="text-gray-600 mb-5">
             Configure AI agents to integrate with external services and APIs for enhanced functionality.
           </p>
-          <button onClick={() => setShowForm(true)} className="btn">
-            <Plus size={16} style={{ marginRight: '8px' }} />
+          <button onClick={() => setShowForm(true)} className="btn flex items-center mx-auto">
+            <Plus size={16} className="mr-2" />
             Create Your First AI Configuration
           </button>
         </div>
       )}
 
       {/* Help Section */}
-      <div className="card mt-20">
-        <h3>AI Integration Help</h3>
-        <div style={{ marginTop: '15px' }}>
-          <h4>Supported AI Services:</h4>
-          <ul style={{ paddingLeft: '20px', lineHeight: '1.6' }}>
-            <li><strong>OpenAI GPT:</strong> https://api.openai.com/v1/chat/completions</li>
-            <li><strong>Anthropic Claude:</strong> https://api.anthropic.com/v1/messages</li>
-            <li><strong>Google Gemini:</strong> https://generativelanguage.googleapis.com/v1beta/models</li>
-            <li><strong>Custom APIs:</strong> Any REST API that accepts POST requests</li>
-          </ul>
+      <div className="card">
+        <h3 className="text-lg font-semibold text-gray-800 mb-4">AI Integration Help</h3>
+        <div className="space-y-6">
+          <div>
+            <h4 className="text-base font-medium text-gray-700 mb-3">Supported AI Services:</h4>
+            <ul className="space-y-2 text-sm text-gray-600">
+              <li className="flex items-start">
+                <span className="font-medium text-gray-800 mr-2">•</span>
+                <div>
+                  <strong>OpenAI GPT:</strong> https://api.openai.com/v1/chat/completions
+                </div>
+              </li>
+              <li className="flex items-start">
+                <span className="font-medium text-gray-800 mr-2">•</span>
+                <div>
+                  <strong>Anthropic Claude:</strong> https://api.anthropic.com/v1/messages
+                </div>
+              </li>
+              <li className="flex items-start">
+                <span className="font-medium text-gray-800 mr-2">•</span>
+                <div>
+                  <strong>Google Gemini:</strong> https://generativelanguage.googleapis.com/v1beta/models
+                </div>
+              </li>
+              <li className="flex items-start">
+                <span className="font-medium text-gray-800 mr-2">•</span>
+                <div>
+                  <strong>Custom APIs:</strong> Any REST API that accepts POST requests
+                </div>
+              </li>
+            </ul>
+          </div>
           
-          <h4 style={{ marginTop: '20px' }}>API Requirements:</h4>
-          <ul style={{ paddingLeft: '20px', lineHeight: '1.6' }}>
-            <li>Must accept POST requests</li>
-            <li>Must accept JSON body with "message" field</li>
-            <li>Should support Bearer token authentication (optional)</li>
-            <li>Should return JSON response</li>
-          </ul>
+          <div>
+            <h4 className="text-base font-medium text-gray-700 mb-3">API Requirements:</h4>
+            <ul className="space-y-2 text-sm text-gray-600">
+              <li className="flex items-start">
+                <span className="font-medium text-gray-800 mr-2">•</span>
+                <div>Must accept POST requests</div>
+              </li>
+              <li className="flex items-start">
+                <span className="font-medium text-gray-800 mr-2">•</span>
+                <div>Must accept JSON body with "message" field</div>
+              </li>
+              <li className="flex items-start">
+                <span className="font-medium text-gray-800 mr-2">•</span>
+                <div>Should support Bearer token authentication (optional)</div>
+              </li>
+              <li className="flex items-start">
+                <span className="font-medium text-gray-800 mr-2">•</span>
+                <div>Should return JSON response</div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

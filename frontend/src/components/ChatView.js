@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -11,7 +11,6 @@ import {
   Video, 
   Search,
   CheckCircle,
-  Clock,
   User,
   Users,
   RefreshCw
@@ -24,27 +23,15 @@ const ChatView = () => {
   const [chat, setChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const messagesEndRef = useRef(null);
-
-  useEffect(() => {
-    if (chatId && isConnected) {
-      fetchChatDetails();
-      fetchMessages();
-    }
-  }, [chatId, isConnected]);
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const fetchChatDetails = async () => {
+  const fetchChatDetails = useCallback(async () => {
     try {
       const response = await axios.get(`/api/whatsapp/chats/${chatId}`);
       setChat(response.data.chat);
@@ -52,9 +39,9 @@ const ChatView = () => {
       console.error('Error fetching chat details:', error);
       toast.error('Failed to fetch chat details');
     }
-  };
+  }, [chatId]);
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     setLoadingMessages(true);
     try {
       const response = await axios.get(`/api/whatsapp/chats/${chatId}/messages?limit=100`);
@@ -65,7 +52,18 @@ const ChatView = () => {
     } finally {
       setLoadingMessages(false);
     }
-  };
+  }, [chatId]);
+
+  useEffect(() => {
+    if (chatId && isConnected) {
+      fetchChatDetails();
+      fetchMessages();
+    }
+  }, [chatId, isConnected, fetchChatDetails, fetchMessages]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -149,117 +147,65 @@ const ChatView = () => {
   }
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div className="h-screen flex flex-col">
       {/* Chat Header */}
-      <div style={{
-        background: '#25D366',
-        color: 'white',
-        padding: '15px 20px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+      <div className="bg-whatsapp-green text-white px-4 py-4 flex items-center justify-between shadow-md">
+        <div className="flex items-center gap-4">
           <button 
             onClick={() => navigate('/chats')}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              padding: '5px'
-            }}
+            className="bg-transparent border-none text-white cursor-pointer p-1 hover:bg-white/20 rounded transition-colors"
           >
             <ArrowLeft size={20} />
           </button>
           
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div className="flex items-center gap-3">
             {chat.isGroup ? (
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                 <Users size={20} />
               </div>
             ) : (
-              <div style={{
-                width: '40px',
-                height: '40px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(255,255,255,0.2)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
+              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
                 <User size={20} />
               </div>
             )}
             
-            <div>
-              <h3 style={{ margin: 0, fontSize: '16px' }}>{chat.name}</h3>
-              <p style={{ margin: 0, fontSize: '12px', opacity: 0.8 }}>
+            <div className="min-w-0">
+              <h3 className="text-base font-semibold m-0 truncate">{chat.name}</h3>
+              <p className="text-xs opacity-80 m-0">
                 {chat.isGroup ? 'Group' : 'Individual chat'}
               </p>
             </div>
           </div>
         </div>
         
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <button style={{
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            padding: '5px'
-          }}>
+        <div className="flex items-center gap-2">
+          <button className="bg-transparent border-none text-white cursor-pointer p-2 hover:bg-white/20 rounded transition-colors">
             <Video size={20} />
           </button>
-          <button style={{
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            padding: '5px'
-          }}>
+          <button className="bg-transparent border-none text-white cursor-pointer p-2 hover:bg-white/20 rounded transition-colors">
             <Phone size={20} />
           </button>
-          <button style={{
-            background: 'none',
-            border: 'none',
-            color: 'white',
-            cursor: 'pointer',
-            padding: '5px'
-          }}>
+          <button className="bg-transparent border-none text-white cursor-pointer p-2 hover:bg-white/20 rounded transition-colors">
             <MoreVertical size={20} />
           </button>
         </div>
       </div>
 
       {/* Messages Area */}
-      <div style={{
-        flex: 1,
-        background: '#e5ddd5',
-        backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
-        overflowY: 'auto',
-        padding: '10px'
+      <div className="flex-1 bg-whatsapp-background overflow-y-auto p-3" style={{
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.1"%3E%3Ccircle cx="30" cy="30" r="2"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")'
       }}>
         {loadingMessages ? (
-          <div className="text-center" style={{ padding: '20px' }}>
-            <RefreshCw size={24} style={{ animation: 'spin 1s linear infinite', marginBottom: '10px' }} />
-            <p>Loading messages...</p>
+          <div className="text-center py-5">
+            <RefreshCw size={24} className="animate-spin mx-auto mb-2 text-whatsapp-green" />
+            <p className="text-gray-600">Loading messages...</p>
           </div>
         ) : messages.length === 0 ? (
-          <div className="text-center" style={{ padding: '40px' }}>
-            <p style={{ color: '#666' }}>No messages yet. Start the conversation!</p>
+          <div className="text-center py-10">
+            <p className="text-gray-600">No messages yet. Start the conversation!</p>
           </div>
         ) : (
-          <div>
+          <div className="space-y-1">
             {messages.map((message, index) => {
               const showDate = index === 0 || 
                 formatDate(message.timestamp) !== formatDate(messages[index - 1].timestamp);
@@ -267,42 +213,22 @@ const ChatView = () => {
               return (
                 <div key={message.id}>
                   {showDate && (
-                    <div style={{
-                      textAlign: 'center',
-                      margin: '10px 0',
-                      fontSize: '12px',
-                      color: '#666',
-                      fontWeight: 'bold'
-                    }}>
+                    <div className="text-center my-2 text-xs text-gray-600 font-semibold">
                       {formatDate(message.timestamp)}
                     </div>
                   )}
                   
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: message.fromMe ? 'flex-end' : 'flex-start',
-                    marginBottom: '5px'
-                  }}>
-                    <div style={{
-                      maxWidth: '70%',
-                      background: message.fromMe ? '#dcf8c6' : 'white',
-                      borderRadius: '8px',
-                      padding: '8px 12px',
-                      boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-                      position: 'relative'
-                    }}>
-                      <div style={{ marginBottom: '5px' }}>
+                  <div className={`flex ${message.fromMe ? 'justify-end' : 'justify-start'} mb-1`}>
+                    <div className={`max-w-[70%] sm:max-w-[60%] rounded-lg px-3 py-2 shadow-sm relative ${
+                      message.fromMe 
+                        ? 'bg-whatsapp-green-light' 
+                        : 'bg-white'
+                    }`}>
+                      <div className="mb-1 text-sm">
                         {message.body}
                       </div>
                       
-                      <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'flex-end',
-                        gap: '5px',
-                        fontSize: '11px',
-                        color: '#666'
-                      }}>
+                      <div className="flex items-center justify-end gap-1 text-xs text-gray-500">
                         <span>{formatTime(message.timestamp)}</span>
                         {getMessageStatus(message)}
                       </div>
@@ -317,60 +243,32 @@ const ChatView = () => {
       </div>
 
       {/* Message Input */}
-      <div style={{
-        background: 'white',
-        padding: '10px 15px',
-        borderTop: '1px solid #e0e0e0',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px'
-      }}>
-        <button style={{
-          background: 'none',
-          border: 'none',
-          cursor: 'pointer',
-          padding: '8px',
-          borderRadius: '50%',
-          color: '#666'
-        }}>
+      <div className="bg-white px-4 py-3 border-t border-gray-200 flex items-center gap-3">
+        <button className="bg-transparent border-none cursor-pointer p-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors">
           <Search size={20} />
         </button>
         
-        <form onSubmit={sendMessage} style={{ flex: 1, display: 'flex', gap: '10px' }}>
+        <form onSubmit={sendMessage} className="flex-1 flex gap-3">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
-            style={{
-              flex: 1,
-              padding: '10px 15px',
-              border: '1px solid #e0e0e0',
-              borderRadius: '20px',
-              outline: 'none',
-              fontSize: '14px'
-            }}
+            className="flex-1 px-4 py-2 border border-gray-300 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-whatsapp-green focus:border-whatsapp-green disabled:opacity-50"
             disabled={sending}
           />
           
           <button
             type="submit"
             disabled={!newMessage.trim() || sending}
-            style={{
-              background: newMessage.trim() && !sending ? '#25D366' : '#ccc',
-              border: 'none',
-              borderRadius: '50%',
-              width: '40px',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              cursor: newMessage.trim() && !sending ? 'pointer' : 'not-allowed',
-              color: 'white'
-            }}
+            className={`w-10 h-10 rounded-full border-none flex items-center justify-center text-white transition-colors ${
+              newMessage.trim() && !sending 
+                ? 'bg-whatsapp-green hover:bg-whatsapp-green-dark cursor-pointer' 
+                : 'bg-gray-400 cursor-not-allowed'
+            }`}
           >
             {sending ? (
-              <RefreshCw size={20} style={{ animation: 'spin 1s linear infinite' }} />
+              <RefreshCw size={20} className="animate-spin" />
             ) : (
               <Send size={20} />
             )}

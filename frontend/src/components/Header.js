@@ -10,141 +10,90 @@ const Header = () => {
   const isActive = (path) => location.pathname === path;
 
   return (
-    <header style={{ 
-      background: '#25D366', 
-      color: 'white', 
-      padding: '1rem 0',
-      marginBottom: '20px'
-    }}>
-      <div className="container" style={{ 
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center' 
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <MessageSquare size={24} />
-          <h1 style={{ margin: 0 }}>WhatsApp Bot Manager</h1>
-        </div>
-        
-        <nav style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-          <Link 
-            to="/" 
-            style={{ 
-              color: 'white', 
-              textDecoration: 'none',
-              opacity: isActive('/') ? 1 : 0.7,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}
-          >
-            <Settings size={16} />
-            Dashboard
-          </Link>
-          
-          <Link 
-            to="/whatsapp" 
-            style={{ 
-              color: 'white', 
-              textDecoration: 'none',
-              opacity: isActive('/whatsapp') ? 1 : 0.7,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}
-          >
-            <MessageSquare size={16} />
-            WhatsApp
-          </Link>
-          
-          <Link 
-            to="/chats" 
-            style={{ 
-              color: 'white', 
-              textDecoration: 'none',
-              opacity: isActive('/chats') ? 1 : 0.7,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}
-          >
-            <Users size={16} />
-            Chats
-          </Link>
-          
-          <Link 
-            to="/templates" 
-            style={{ 
-              color: 'white', 
-              textDecoration: 'none',
-              opacity: isActive('/templates') ? 1 : 0.7,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}
-          >
-            <Send size={16} />
-            Templates
-          </Link>
-          
-          <Link 
-            to="/ai-config" 
-            style={{ 
-              color: 'white', 
-              textDecoration: 'none',
-              opacity: isActive('/ai-config') ? 1 : 0.7,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}
-          >
-            <Bot size={16} />
-            AI Config
-          </Link>
-          
-          <Link 
-            to="/send-message" 
-            style={{ 
-              color: 'white', 
-              textDecoration: 'none',
-              opacity: isActive('/send-message') ? 1 : 0.7,
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}
-          >
-            <Send size={16} />
-            Send Message
-          </Link>
-          
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '10px',
-            marginLeft: '20px',
-            paddingLeft: '20px',
-            borderLeft: '1px solid rgba(255,255,255,0.3)'
-          }}>
-            <span>Welcome, {user?.username}</span>
-            <button 
-              onClick={logout}
-              style={{
-                background: 'rgba(255,255,255,0.2)',
-                border: 'none',
-                color: 'white',
-                padding: '5px 10px',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px'
-              }}
-            >
-              <LogOut size={16} />
-              Logout
-            </button>
+    <header className="bg-whatsapp-green text-white py-4 mb-5">
+      <div className="container">
+        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center gap-4">
+          {/* Logo and Title */}
+          <div className="flex items-center gap-2.5">
+            <MessageSquare size={24} />
+            <h1 className="text-lg sm:text-xl font-bold m-0">WhatsApp Bot Manager</h1>
           </div>
-        </nav>
+          
+          {/* Navigation */}
+          <nav className="flex flex-wrap items-center gap-2 sm:gap-4">
+            <Link 
+              to="/" 
+              className={`text-white no-underline flex items-center gap-1 px-2 py-1 rounded transition-opacity ${
+                isActive('/') ? 'opacity-100 bg-white/20' : 'opacity-70 hover:opacity-100'
+              }`}
+            >
+              <Settings size={16} />
+              <span className="hidden sm:inline">Dashboard</span>
+            </Link>
+            
+            <Link 
+              to="/whatsapp" 
+              className={`text-white no-underline flex items-center gap-1 px-2 py-1 rounded transition-opacity ${
+                isActive('/whatsapp') ? 'opacity-100 bg-white/20' : 'opacity-70 hover:opacity-100'
+              }`}
+            >
+              <MessageSquare size={16} />
+              <span className="hidden sm:inline">WhatsApp</span>
+            </Link>
+            
+            <Link 
+              to="/chats" 
+              className={`text-white no-underline flex items-center gap-1 px-2 py-1 rounded transition-opacity ${
+                isActive('/chats') ? 'opacity-100 bg-white/20' : 'opacity-70 hover:opacity-100'
+              }`}
+            >
+              <Users size={16} />
+              <span className="hidden sm:inline">Chats</span>
+            </Link>
+            
+            <Link 
+              to="/templates" 
+              className={`text-white no-underline flex items-center gap-1 px-2 py-1 rounded transition-opacity ${
+                isActive('/templates') ? 'opacity-100 bg-white/20' : 'opacity-70 hover:opacity-100'
+              }`}
+            >
+              <Send size={16} />
+              <span className="hidden sm:inline">Templates</span>
+            </Link>
+            
+            <Link 
+              to="/ai-config" 
+              className={`text-white no-underline flex items-center gap-1 px-2 py-1 rounded transition-opacity ${
+                isActive('/ai-config') ? 'opacity-100 bg-white/20' : 'opacity-70 hover:opacity-100'
+              }`}
+            >
+              <Bot size={16} />
+              <span className="hidden sm:inline">AI Config</span>
+            </Link>
+            
+            <Link 
+              to="/send-message" 
+              className={`text-white no-underline flex items-center gap-1 px-2 py-1 rounded transition-opacity ${
+                isActive('/send-message') ? 'opacity-100 bg-white/20' : 'opacity-70 hover:opacity-100'
+              }`}
+            >
+              <Send size={16} />
+              <span className="hidden sm:inline">Send Message</span>
+            </Link>
+            
+            {/* User Info and Logout */}
+            <div className="flex items-center gap-2.5 ml-4 pl-4 border-l border-white/30">
+              <span className="text-sm hidden sm:inline">Welcome, {user?.username}</span>
+              <button 
+                onClick={logout}
+                className="bg-white/20 border-none text-white px-2.5 py-1.5 rounded cursor-pointer flex items-center gap-1 text-sm hover:bg-white/30 transition-colors"
+              >
+                <LogOut size={16} />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </div>
+          </nav>
+        </div>
       </div>
     </header>
   );
