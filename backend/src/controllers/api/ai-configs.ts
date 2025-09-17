@@ -13,7 +13,7 @@ const aiConfigsRouter = Router();
 // Get all AI configs for the authenticated user
 aiConfigsRouter.get('/ai-configs', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     const aiConfigs = await getAllAIConfigs(userId);
     res.json(aiConfigs);
   } catch (error: any) {
@@ -26,7 +26,7 @@ aiConfigsRouter.get('/ai-configs', authenticateToken, async (req: Request, res: 
 aiConfigsRouter.get('/ai-configs/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     const aiConfig = await getAIConfigById(parseInt(id), userId);
     
     if (!aiConfig) {
@@ -44,7 +44,7 @@ aiConfigsRouter.get('/ai-configs/:id', authenticateToken, async (req: Request, r
 aiConfigsRouter.post('/ai-configs', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { name, endpoint, api_key } = req.body;
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     
     if (!name || !endpoint || !api_key) {
       return res.status(400).json({ error: 'Name, endpoint, and API key are required' });
@@ -70,7 +70,7 @@ aiConfigsRouter.put('/ai-configs/:id', authenticateToken, async (req: Request, r
   try {
     const { id } = req.params;
     const { name, endpoint, api_key } = req.body;
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     
     if (!name || !endpoint || !api_key) {
       return res.status(400).json({ error: 'Name, endpoint, and API key are required' });
@@ -99,7 +99,7 @@ aiConfigsRouter.put('/ai-configs/:id', authenticateToken, async (req: Request, r
 aiConfigsRouter.delete('/ai-configs/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     
     const success = await deleteAIConfig(parseInt(id), userId);
     

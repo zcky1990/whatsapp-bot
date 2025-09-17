@@ -13,7 +13,8 @@ const templatesRouter = Router();
 // Get all templates for the authenticated user
 templatesRouter.get('/templates', authenticateToken, async (req: Request, res: Response) => {
   try {
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
+    console.log('userId', userId);
     const templates = await getAllTemplates(userId);
     res.json(templates);
   } catch (error: any) {
@@ -26,7 +27,7 @@ templatesRouter.get('/templates', authenticateToken, async (req: Request, res: R
 templatesRouter.get('/templates/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     const template = await getTemplateById(parseInt(id), userId);
     
     if (!template) {
@@ -44,7 +45,7 @@ templatesRouter.get('/templates/:id', authenticateToken, async (req: Request, re
 templatesRouter.post('/templates', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { name, content, variables } = req.body;
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     
     if (!name || !content) {
       return res.status(400).json({ error: 'Name and content are required' });
@@ -70,7 +71,7 @@ templatesRouter.put('/templates/:id', authenticateToken, async (req: Request, re
   try {
     const { id } = req.params;
     const { name, content, variables } = req.body;
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     
     if (!name || !content) {
       return res.status(400).json({ error: 'Name and content are required' });
@@ -99,7 +100,7 @@ templatesRouter.put('/templates/:id', authenticateToken, async (req: Request, re
 templatesRouter.delete('/templates/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const userId = (req as any).user.id;
+    const userId = (req as any).user.userId;
     
     const success = await deleteTemplate(parseInt(id), userId);
     
