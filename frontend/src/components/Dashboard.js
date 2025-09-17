@@ -9,7 +9,8 @@ import {
   CheckCircle, 
   XCircle,
   QrCode,
-  Users
+  Users,
+  Zap
 } from 'lucide-react';
 
 const Dashboard = () => {
@@ -157,6 +158,23 @@ const Dashboard = () => {
           <Link to="/chats" className="btn w-full flex items-center justify-center">
             <Users size={16} className="mr-2" />
             View Chats
+          </Link>
+        </div>
+
+        {/* Rules Card */}
+        <div className="card hover:shadow-lg transition-shadow duration-200">
+          <div className="flex items-center mb-4">
+            <Zap size={24} className="text-whatsapp-green mr-3" />
+            <h3 className="text-lg font-semibold text-gray-800">Automation Rules</h3>
+          </div>
+          
+          <p className="text-gray-600 mb-4 text-sm leading-relaxed">
+            Create automated responses and actions based on incoming message conditions.
+          </p>
+          
+          <Link to="/rules" className="btn w-full flex items-center justify-center">
+            <Zap size={16} className="mr-2" />
+            Manage Rules
           </Link>
         </div>
       </div>

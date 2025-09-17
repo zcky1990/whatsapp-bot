@@ -2,6 +2,7 @@
 import { Client, LocalAuth, ClientOptions, Chat } from "whatsapp-web.js";
 import qrcode from "qrcode";
 import { Server, Socket } from 'socket.io';
+import rulesEngine from '../services/rulesEngine.service';
 
 /**
  * A singleton class for managing a single WhatsApp Web client connection.
@@ -165,6 +166,53 @@ class whatsappClientConnection {
 
     this.client.on("remote_session_saved", () => {
       console.log("Remote session saved");
+    });
+
+    // Handle incoming messages for rules processing
+    this.client.on("message", async (message) => {
+      try {
+        // Only process messages that are not from us
+        if (message.fromMe) {
+          return;
+        }
+
+        console.log("Incoming message received:", {
+          from: message.from,
+          body: message.body,
+          type: message.type,
+          timestamp: message.timestamp
+        });
+
+        // Create message context for rules engine
+        const messageContext = {
+          messageId: message.id._serialized,
+          body: message.body || '',
+          from: message.from,
+          to: message.to,
+          fromMe: message.fromMe,
+          timestamp: message.timestamp,
+          type: message.type,
+          chatId: message.from,
+          isGroup: message.from.includes('@g.us')
+        };
+
+        // Process through rules engine
+        // Note: We need to get the user ID somehow - this is a limitation
+        // For now, we'll process rules for all users (you might want to modify this)
+        const results = await rulesEngine.processMessage(1, messageContext); // Using user ID 1 as default
+        
+        if (results && results.length > 0) {
+          console.log("Rules processing results:", results);
+          
+          // Emit results to frontend via socket
+          this.io.emit("rules-processed", {
+            messageId: message.id._serialized,
+            results: results
+          });
+        }
+      } catch (error) {
+        console.error("Error processing message through rules engine:", error);
+      }
     });
 
     this.client.initialize();

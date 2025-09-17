@@ -9,6 +9,7 @@ import  authRouter from './controllers/api/auth';
 import templatesRouter from './controllers/api/templates';
 import aiConfigsRouter from './controllers/api/ai-configs';
 import whatsappRouter from './controllers/api/whatsapp';
+import rulesRouter from './controllers/api/rules';
 import registerSocketHandlers from './websocket'; // Import the handler function
 
 // Load environment variables from .env file
@@ -46,6 +47,7 @@ app.use('/api', authRouter);
 app.use('/api', templatesRouter);
 app.use('/api', aiConfigsRouter);
 app.use('/api', whatsappRouter);
+app.use('/api', rulesRouter);
 
 // Start the server
 server.listen(PORT, () => {

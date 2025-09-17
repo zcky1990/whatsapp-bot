@@ -12,6 +12,7 @@ import AIConfig from './components/AIConfig';
 import MessageSender from './components/MessageSender';
 import ChatList from './components/ChatList';
 import ChatView from './components/ChatView';
+import RulesManager from './components/RulesManager';
 import Header from './components/Header';
 
 import { AuthProvider, useAuth } from './contexts/AuthContext';
@@ -61,6 +62,7 @@ function AppContent() {
                   <Route path="/templates" element={<TemplateManager />} />
                   <Route path="/ai-config" element={<AIConfig />} />
                   <Route path="/send-message" element={<MessageSender />} />
+                  <Route path="/rules" element={<RulesManager />} />
                   <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
               </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { LogOut, MessageSquare, Settings, Send, Bot, Users } from 'lucide-react';
+import { LogOut, MessageSquare, Settings, Send, Bot, Users, Zap } from 'lucide-react';
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -79,6 +79,16 @@ const Header = () => {
             >
               <Send size={16} />
               <span className="hidden sm:inline">Send Message</span>
+            </Link>
+            
+            <Link 
+              to="/rules" 
+              className={`text-white no-underline flex items-center gap-1 px-2 py-1 rounded transition-opacity ${
+                isActive('/rules') ? 'opacity-100 bg-white/20' : 'opacity-70 hover:opacity-100'
+              }`}
+            >
+              <Zap size={16} />
+              <span className="hidden sm:inline">Rules</span>
             </Link>
             
             {/* User Info and Logout */}
